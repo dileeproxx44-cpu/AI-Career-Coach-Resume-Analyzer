@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareerAI – AI Career Coach & Resume Analyzer</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <!-- Top Header -->
+    <header class="app-header">
+        <div class="header-container">
+            <div class="brand">
+                <div class="brand-logo">🤖</div>
+                <div class="brand-text">
+                    <h1>CareerAI</h1>
+                    <p class="subtitle">AI Career Coach & Resume Analyzer</p>
+                </div>
+            </div>
+            <div class="header-badge">
+                <span class="pulse-dot"></span> Powered by Gemini AI
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-container">
+        <div class="nav-tabs" role="tablist">
+            <button class="nav-btn active" id="tab-career" data-tab="section-career" role="tab">
+                <i class="fa-solid fa-bullseye nav-icon"></i> 🎯 Career Coach
+            </button>
+            <button class="nav-btn" id="tab-resume" data-tab="section-resume" role="tab">
+                <i class="fa-solid fa-file-lines nav-icon"></i> 📄 Resume Analyzer
+            </button>
+            <button class="nav-btn" id="tab-prompt" data-tab="section-prompt" role="tab">
+                <i class="fa-solid fa-brain nav-icon"></i> 🧠 Prompt Engineering
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <!-- Alert Banner for Errors or Info -->
+        <div id="global-alert" class="alert-box hidden">
+            <i class="fa-solid fa-circle-exclamation alert-icon"></i>
+            <span id="alert-message">An error occurred.</span>
+            <button class="alert-close" onclick="closeAlert()">&times;</button>
+        </div>
+
+        <!-- SECTION 1: AI CAREER COACH -->
+        <section id="section-career" class="tab-content active-content">
+            <div class="section-grid">
+                <!-- Input Form Card -->
+                <div class="card form-card">
+                    <div class="card-header">
+                        <div class="header-icon"><i class="fa-solid fa-user-graduate"></i></div>
+                        <div>
+                            <h2>Student Career Profile</h2>
+                            <p>Fill in your details to receive personalized AI career guidance.</p>
+                        </div>
+                    </div>
+                    
+                    <form id="career-form" class="app-form">
+                        <div class="form-group">
+                            <label for="name"><i class="fa-solid fa-user"></i> Full Name <span class="required">*</span></label>
+                            <input type="text" id="name" name="name" placeholder="e.g. Alex Johnson" required>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="education"><i class="fa-solid fa-graduation-cap"></i> Education</label>
+                                <input type="text" id="education" name="education" placeholder="e.g. B.Tech Computer Science / High School">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="experience_level"><i class="fa-solid fa-layer-group"></i> Experience Level</label>
+                                <select id="experience_level" name="experience_level">
+                                    <option value="Fresher / Beginner">Fresher / Student</option>
+                                    <option value="Junior (0-2 years)">Junior (0-2 years)</option>
+                                    <option value="Mid-Level (2-5 years)">Mid-Level (2-5 years)</option>
+                                    <option value="Career Switcher">Career Switcher</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="skills"><i class="fa-solid fa-code"></i> Current Skills</label>
+                            <input type="text" id="skills" name="skills" placeholder="e.g. Python, HTML, Basics of SQL, Communication">
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="target_role"><i class="fa-solid fa-crosshairs"></i> Target Role <span class="required">*</span></label>
+                                <input type="text" id="target_role" name="target_role" placeholder="e.g. Python Developer / Data Analyst" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="study_hours"><i class="fa-solid fa-clock"></i> Study Hours / Day</label>
+                                <input type="text" id="study_hours" name="study_hours" placeholder="e.g. 3 Hours">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="career_goal"><i class="fa-solid fa-rocket"></i> Career Goal</label>
+                            <textarea id="career_goal" name="career_goal" rows="2" placeholder="e.g. Get my first software engineering job at a growth startup in 6 months"></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" id="btn-generate-career">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> Generate Career Guidance
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Guidance Result Display -->
+                <div class="card result-card" id="career-result-card">
+                    <div class="card-header border-bottom">
+                        <div class="header-icon secondary"><i class="fa-solid fa-lightbulb"></i></div>
+                        <div>
+                            <h2>AI Career Roadmap</h2>
+                            <p>Your personalized mentor advice will appear here.</p>
+                        </div>
+                    </div>
+
+                    <!-- Initial Empty State -->
+                    <div id="career-empty-state" class="empty-state">
+                        <div class="empty-icon"><i class="fa-solid fa-compass-drafting"></i></div>
+                        <h3>Ready for Career Guidance</h3>
+                        <p>Fill out the profile form and click <strong>"Generate Career Guidance"</strong> to receive your AI-crafted learning roadmap and recommendations.</p>
+                    </div>
+
+                    <!-- Loading State -->
+                    <div id="career-loading" class="loading-state hidden">
+                        <div class="spinner"></div>
+                        <p class="loading-text">🤖 AI is analyzing your profile...</p>
+                        <p class="loading-subtext">Evaluating skills, mapping target role requirements, and designing roadmap...</p>
+                    </div>
+
+                    <!-- Result Output Box -->
+                    <div id="career-output" class="output-content hidden"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: AI RESUME ANALYZER -->
+        <section id="section-resume" class="tab-content">
+            <div class="section-grid">
+                <!-- Resume Upload Card -->
+                <div class="card form-card">
+                    <div class="card-header">
+                        <div class="header-icon"><i class="fa-solid fa-file-pdf"></i></div>
+                        <div>
+                            <h2>Resume & Job Details</h2>
+                            <p>Upload your PDF resume to evaluate ATS score and key improvements.</p>
+                        </div>
+                    </div>
+
+                    <form id="resume-form" class="app-form">
+                        <!-- Dropzone File Upload -->
+                        <div class="form-group">
+                            <label><i class="fa-solid fa-cloud-arrow-up"></i> Upload Resume (PDF) <span class="required">*</span></label>
+                            <div class="file-dropzone" id="dropzone">
+                                <input type="file" id="resume_file" name="resume" accept=".pdf" class="file-input" required>
+                                <div class="dropzone-content">
+                                    <i class="fa-solid fa-file-pdf dropzone-icon"></i>
+                                    <p class="dropzone-title">Click to upload or drag & drop PDF</p>
+                                    <p class="dropzone-hint">Supports PDF formats up to 10MB</p>
+                                </div>
+                                <div class="file-preview hidden" id="file-preview">
+                                    <i class="fa-solid fa-file-circle-check file-icon"></i>
+                                    <div class="file-info">
+                                        <span id="file-name" class="file-name">resume.pdf</span>
+                                        <span id="file-size" class="file-size">120 KB</span>
+                                    </div>
+                                    <button type="button" class="btn-remove-file" id="btn-remove-file" title="Remove file">&times;</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="resume_target_role"><i class="fa-solid fa-briefcase"></i> Target Job Role <span class="required">*</span></label>
+                            <input type="text" id="resume_target_role" name="target_role" placeholder="e.g. Full Stack Developer / Data Scientist" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="resume_experience_level"><i class="fa-solid fa-chart-line"></i> Experience Level</label>
+                            <select id="resume_experience_level" name="experience_level">
+                                <option value="Fresher / Entry Level">Fresher / Entry Level</option>
+                                <option value="Junior (1-2 years)">Junior (1-2 years)</option>
+                                <option value="Mid-Level (3-5 years)">Mid-Level (3-5 years)</option>
+                                <option value="Senior (5+ years)">Senior (5+ years)</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" id="btn-analyze-resume">
+                            <i class="fa-solid fa-magnifying-glass-chart"></i> Analyze Resume
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Analysis Result Display -->
+                <div class="card result-card" id="resume-result-card">
+                    <div class="card-header border-bottom">
+                        <div class="header-icon secondary"><i class="fa-solid fa-chart-pie"></i></div>
+                        <div>
+                            <h2>AI Resume Analysis</h2>
+                            <p>Detailed breakdown of strengths, missing skills, and ATS optimization.</p>
+                        </div>
+                    </div>
+
+                    <!-- Initial Empty State -->
+                    <div id="resume-empty-state" class="empty-state">
+                        <div class="empty-icon"><i class="fa-solid fa-file-magnifying-glass"></i></div>
+                        <h3>Upload Your Resume</h3>
+                        <p>Select your PDF resume and target job role, then click <strong>"Analyze Resume"</strong> to extract insights, ATS recommendations, and matching scores.</p>
+                    </div>
+
+                    <!-- Loading State -->
+                    <div id="resume-loading" class="loading-state hidden">
+                        <div class="spinner"></div>
+                        <p class="loading-text">📄 AI is analyzing your resume...</p>
+                        <p class="loading-subtext">Extracting resume text via PyPDF, scanning for keywords, and scoring against target role...</p>
+                    </div>
+
+                    <!-- Result Output Box -->
+                    <div id="resume-output" class="output-content hidden"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: PROMPT ENGINEERING -->
+        <section id="section-prompt" class="tab-content">
+            <div class="prompt-container">
+                <div class="card prompt-hero-card">
+                    <div class="prompt-hero-header">
+                        <div class="hero-badge">🧠 Learn Prompt Engineering</div>
+                        <h2>The Science of Better AI Prompts</h2>
+                        <p>Learn how structuring your prompts leads to significantly higher quality AI career coaching and resume analysis results.</p>
+                    </div>
+
+                    <!-- Better Prompt Banner -->
+                    <div class="prompt-formula-banner">
+                        <div class="formula-box">
+                            <span class="formula-text">Better Prompt</span>
+                            <span class="formula-arrow">↓</span>
+                            <span class="formula-text highlight">Better AI Response</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comparison Cards Grid -->
+                <div class="prompt-grid">
+                    <!-- Bad Prompt Card -->
+                    <div class="card comparison-card bad-prompt">
+                        <div class="card-header">
+                            <div class="header-icon icon-bad"><i class="fa-solid fa-thumbs-down"></i></div>
+                            <div>
+                                <h3>❌ Bad Prompt</h3>
+                                <span class="tag tag-bad">Vague & Unstructured</span>
+                            </div>
+                        </div>
+                        <div class="code-box bad-box">
+                            <code>"Analyze my resume"</code>
+                        </div>
+                        <div class="comparison-details">
+                            <p class="why-bad-title"><strong>Why this gives poor results:</strong></p>
+                            <ul>
+                                <li><i class="fa-solid fa-xmark red-icon"></i> Lacks context about your target job role</li>
+                                <li><i class="fa-solid fa-xmark red-icon"></i> Doesn't specify your experience level</li>
+                                <li><i class="fa-solid fa-xmark red-icon"></i> No clear formatting or section requirements</li>
+                                <li><i class="fa-solid fa-xmark red-icon"></i> Leads to generic, high-level AI advice</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Good Prompt Card -->
+                    <div class="card comparison-card good-prompt">
+                        <div class="card-header">
+                            <div class="header-icon icon-good"><i class="fa-solid fa-thumbs-up"></i></div>
+                            <div>
+                                <h3>✅ Good (Structured) Prompt</h3>
+                                <span class="tag tag-good">Role + Context + Rules</span>
+                            </div>
+                        </div>
+                        <div class="code-box good-box">
+                            <code>
+                                Act as an expert Resume Reviewer.<br>
+                                Target Role: Python Developer<br>
+                                Experience: Fresher<br>
+                                RESUME: [Extracted Text]<br>
+                                Provide: Missing Skills, ATS Tips, 3 Projects.
+                            </code>
+                        </div>
+                        <div class="comparison-details">
+                            <p class="why-good-title"><strong>Why this produces elite results:</strong></p>
+                            <ul>
+                                <li><i class="fa-solid fa-check green-icon"></i> Assigns a clear domain persona/role to the AI</li>
+                                <li><i class="fa-solid fa-check green-icon"></i> Supplies explicit background context</li>
+                                <li><i class="fa-solid fa-check green-icon"></i> Directs exact output sections & action steps</li>
+                                <li><i class="fa-solid fa-check green-icon"></i> Tailors advice precisely for freshers</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5 Components of Structured Prompting -->
+                <div class="card components-card">
+                    <div class="card-header border-bottom">
+                        <div class="header-icon"><i class="fa-solid fa-cubes"></i></div>
+                        <div>
+                            <h2>The 5 Core Components of a Structured Prompt</h2>
+                            <p>Every effective prompt sent to Gemini AI in CareerAI follows this 5-part architecture:</p>
+                        </div>
+                    </div>
+
+                    <div class="components-grid">
+                        <div class="component-step">
+                            <div class="step-num">1</div>
+                            <div class="step-content">
+                                <h4>🎭 Role (Persona)</h4>
+                                <p>Tells the AI who to act as. Example: <em>"Act as an expert AI Career Mentor."</em></p>
+                            </div>
+                        </div>
+
+                        <div class="component-step">
+                            <div class="step-num">2</div>
+                            <div class="step-content">
+                                <h4>📌 Context</h4>
+                                <p>Provides user details, student background, education, and target job aspirations.</p>
+                            </div>
+                        </div>
+
+                        <div class="component-step">
+                            <div class="step-num">3</div>
+                            <div class="step-content">
+                                <h4>📥 Input Data</h4>
+                                <p>The actual data to be analyzed (e.g., extracted PDF resume text or form parameters).</p>
+                            </div>
+                        </div>
+
+                        <div class="component-step">
+                            <div class="step-num">4</div>
+                            <div class="step-content">
+                                <h4>📋 Instructions & Rules</h4>
+                                <p>Defines what to do and what NOT to do (e.g. <em>"Do not invent skills. Keep explanations simple."</em>).</p>
+                            </div>
+                        </div>
+
+                        <div class="component-step">
+                            <div class="step-num">5</div>
+                            <div class="step-content">
+                                <h4>📊 Output Format</h4>
+                                <p>Lists exact numbered sections for clear visual display (Summary, Missing Skills, Projects, ATS tips).</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        <div class="footer-container">
+            <p><strong>CareerAI</strong> – AI Career Coach & Resume Analyzer | Powered by Google Gemini API & Flask</p>
+        </div>
+    </footer>
+
+    <!-- Script -->
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
