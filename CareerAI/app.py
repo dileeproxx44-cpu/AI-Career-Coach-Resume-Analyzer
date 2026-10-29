@@ -7,7 +7,8 @@ from dotenv import load_dotenv
 import pypdf
 
 # Load environment variables from .env file
-load_dotenv()
+ENV_PATH = os.path.join(os.path.dirname(__file__), '.env')
+load_dotenv(dotenv_path=ENV_PATH)
 
 app = Flask(__name__)
 
@@ -24,10 +25,12 @@ for filepath in [USERS_FILE, ANALYSIS_FILE]:
         with open(filepath, 'w', encoding='utf-8') as f:
             json.dump([], f, indent=2)
 
+import time
+
 def get_gemini_client():
     """Returns initialized Gemini client or error message if API key is invalid."""
     # Force reload .env so changes are picked up immediately
-    load_dotenv(override=True)
+    load_dotenv(dotenv_path=ENV_PATH, override=True)
     api_key = os.getenv("GEMINI_API_KEY", "").strip()
     if not api_key or api_key == "your_api_key":
         return None, "Gemini API Key is not configured. Please update your .env file with a valid GEMINI_API_KEY."
@@ -57,28 +60,41 @@ def call_gemini_ai(prompt):
         return None, error
 
     # Active Gemini models in preference order
-    models_to_try = ['gemini-3.6-flash', 'gemini-2.5-flash', 'gemini-flash-latest']
+    models_to_try = [
+        'gemini-3.6-flash',
+        'gemini-3.5-flash',
+        'gemini-3.5-flash-lite',
+        'gemini-flash-latest'
+    ]
     
     last_exception = None
     for model_name in models_to_try:
-        try:
-            if hasattr(client, 'models'):
-                # Using google-genai SDK
-                response = client.models.generate_content(
-                    model=model_name,
-                    contents=prompt,
-                )
-                if response and response.text:
-                    return response.text, None
-            else:
-                # Using LegacyWrapper
-                res_text = client.generate_content(prompt)
-                if res_text:
-                    return res_text, None
-        except Exception as e:
-            print(f"Model {model_name} failed: {e}")
-            last_exception = e
-            continue
+        # Retry up to 3 attempts per model for transient errors (e.g. 503 UNAVAILABLE / 429)
+        for attempt in range(3):
+            try:
+                if hasattr(client, 'models'):
+                    # Using google-genai SDK
+                    response = client.models.generate_content(
+                        model=model_name,
+                        contents=prompt,
+                    )
+                    if response and response.text:
+                        return response.text, None
+                else:
+                    # Using LegacyWrapper
+                    res_text = client.generate_content(prompt)
+                    if res_text:
+                        return res_text, None
+            except Exception as e:
+                err_str = str(e)
+                print(f"Model {model_name} (attempt {attempt + 1}) failed: {err_str}")
+                last_exception = e
+                # If 503 UNAVAILABLE or 429, wait briefly and retry before giving up on model
+                if ("503" in err_str or "UNAVAILABLE" in err_str or "429" in err_str) and attempt < 2:
+                    time.sleep(1.5 * (attempt + 1))
+                    continue
+                # If 404 or other non-transient error, move to next fallback model immediately
+                break
 
     return None, f"AI generation error: {str(last_exception)}"
 
