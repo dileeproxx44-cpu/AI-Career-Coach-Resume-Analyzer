@@ -1,51 +1,64 @@
 /* ==========================================================================
-   CareerAI - Stylesheet
-   Color Palette: Primary Orange (#ff6b00), Soft Backgrounds (#f8fafc), White (#ffffff)
-   Design System: Modern Light UI, Cards, Micro-interactions, Clean Typography
+   CareerAI — Stylesheet v2
+   Direction: "The Ascent" — an executive, editorial redesign built around
+   career trajectory. Deep ink-navy + muted brass replace the generic
+   startup-orange; a confident editorial serif replaces the default
+   geometric sans pairing. The signature motif is a hand-drawn ascending
+   line — literalizing "career growth" — used in the hero and as a quiet
+   structural device (progress, steps, formula) rather than decoration.
+   All class names preserved from v1 — drop-in replacement, no HTML changes.
    ========================================================================== */
 
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
 :root {
-    /* Primary Color Token - Rich Professional Orange */
-    --primary: #ff6b00;
-    --primary-hover: #e05d00;
-    --primary-light: #fff4ec;
-    --primary-border: #ffd8bf;
-    --primary-shadow: rgba(255, 107, 0, 0.25);
+    /* ---- Primary: muted brass/gold — "achievement", not startup-orange ---- */
+    --primary: #b8842f;
+    --primary-hover: #996c22;
+    --primary-light: #faf3e4;
+    --primary-border: #e7d2a4;
+    --primary-shadow: rgba(184, 132, 47, 0.22);
 
-    /* Secondary & Accent Tokens */
-    --secondary: #2563eb;
-    --secondary-light: #eff6ff;
-    --success: #10b981;
-    --success-light: #ecfdf5;
-    --warning: #f59e0b;
-    --danger: #ef4444;
-    --danger-light: #fef2f2;
+    /* ---- Secondary & accent tokens ---- */
+    --secondary: #0b3b5c;
+    --secondary-light: #eaf1f6;
+    --success: #2f7a52;
+    --success-light: #eaf5ee;
+    --warning: #b8842f;
+    --danger: #b34332;
+    --danger-light: #faeeec;
 
-    /* Light Theme Neutral Colors (No Dark Theme) */
-    --bg-body: #f8fafc;
+    /* ---- Ink & paper neutrals (cool, not warm-cream default) ---- */
+    --bg-body: #f3f4f3;
     --bg-card: #ffffff;
     --bg-input: #ffffff;
-    --bg-subtle: #f1f5f9;
-    --bg-hover: #e2e8f0;
+    --bg-subtle: #eef0ee;
+    --bg-hover: #e3e6e2;
 
-    /* Text Colors */
-    --text-main: #0f172a;
-    --text-muted: #64748b;
-    --text-light: #94a3b8;
-    
-    /* Border & Shadow */
-    --border-color: #e2e8f0;
-    --border-focus: #ff6b00;
-    --radius-sm: 8px;
-    --radius-md: 14px;
-    --radius-lg: 20px;
-    --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
-    --shadow-md: 0 4px 16px rgba(15, 23, 42, 0.06);
-    --shadow-lg: 0 12px 32px rgba(15, 23, 42, 0.08);
+    --ink-900: #10231d;
+    --text-main: #16231c;
+    --text-muted: #58685f;
+    --text-light: #8e9b92;
 
-    /* Fonts */
-    --font-heading: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+    --border-color: #dde1dc;
+    --border-focus: #b8842f;
+
+    --radius-sm: 6px;
+    --radius-md: 12px;
+    --radius-lg: 18px;
+
+    --shadow-sm: 0 1px 2px rgba(16, 35, 29, 0.05);
+    --shadow-md: 0 6px 20px rgba(16, 35, 29, 0.07);
+    --shadow-lg: 0 18px 40px rgba(16, 35, 29, 0.10);
+
+    /* ---- Fonts: editorial serif display + grotesk body + mono data ---- */
+    --font-heading: 'Newsreader', Georgia, serif;
     --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+
+    --ease-ascent: cubic-bezier(0.19, 1, 0.22, 1);
+    --dur-fast: 0.2s;
+    --dur-med: 0.4s;
 }
 
 /* Reset & Base Setup */
@@ -58,6 +71,10 @@
 body {
     font-family: var(--font-body);
     background-color: var(--bg-body);
+    background-image:
+        radial-gradient(640px 360px at 100% 0%, rgba(184, 132, 47, 0.06), transparent 60%),
+        radial-gradient(520px 360px at 0% 100%, rgba(11, 59, 92, 0.05), transparent 60%);
+    background-attachment: fixed;
     color: var(--text-main);
     line-height: 1.6;
     min-height: 100vh;
@@ -103,19 +120,28 @@ body {
     justify-content: center;
     border-radius: var(--radius-md);
     border: 1px solid var(--primary-border);
+    transition: transform var(--dur-med) var(--ease-ascent);
+}
+
+.brand:hover .brand-logo {
+    transform: translateY(-2px) rotate(-4deg);
 }
 
 .brand-text h1 {
     font-family: var(--font-heading);
-    font-size: 1.6rem;
-    font-weight: 800;
+    font-size: 1.7rem;
+    font-weight: 600;
+    font-style: italic;
     color: var(--text-main);
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
     line-height: 1.1;
 }
 
 .brand-text .subtitle {
-    font-size: 0.85rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
     color: var(--text-muted);
     font-weight: 500;
 }
@@ -125,11 +151,13 @@ body {
     align-items: center;
     gap: 0.5rem;
     background-color: var(--primary-light);
-    color: var(--primary);
+    color: var(--primary-hover);
     padding: 0.4rem 0.85rem;
     border-radius: 50px;
-    font-size: 0.825rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
     font-weight: 600;
+    letter-spacing: 0.02em;
     border: 1px solid var(--primary-border);
 }
 
@@ -138,14 +166,14 @@ body {
     height: 8px;
     background-color: var(--primary);
     border-radius: 50%;
-    box-shadow: 0 0 0 0 rgba(255, 107, 0, 0.5);
+    box-shadow: 0 0 0 0 rgba(184, 132, 47, 0.5);
     animation: pulse 1.8s infinite;
 }
 
 @keyframes pulse {
-    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 107, 0, 0.7); }
-    70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(255, 107, 0, 0); }
-    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 107, 0, 0); }
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(184, 132, 47, 0.6); }
+    70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(184, 132, 47, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(184, 132, 47, 0); }
 }
 
 /* ==========================================================================
@@ -169,13 +197,13 @@ body {
     background: transparent;
     border: none;
     padding: 1rem 1.4rem;
-    font-family: var(--font-heading);
-    font-size: 0.95rem;
+    font-family: var(--font-body);
+    font-size: 0.92rem;
     font-weight: 600;
     color: var(--text-muted);
     cursor: pointer;
     border-bottom: 3px solid transparent;
-    transition: all 0.2s ease;
+    transition: color var(--dur-fast) ease, background-color var(--dur-fast) ease, border-color var(--dur-fast) ease;
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -183,12 +211,12 @@ body {
 }
 
 .nav-btn:hover {
-    color: var(--primary);
+    color: var(--primary-hover);
     background-color: var(--primary-light);
 }
 
 .nav-btn.active {
-    color: var(--primary);
+    color: var(--primary-hover);
     border-bottom-color: var(--primary);
     background-color: var(--primary-light);
 }
@@ -201,12 +229,12 @@ body {
     max-width: 1280px;
     width: 100%;
     margin: 0 auto;
-    padding: 2rem;
+    padding: clamp(1rem, 3vw, 2rem);
 }
 
 .tab-content {
     display: none;
-    animation: fadeIn 0.3s ease;
+    animation: fadeIn var(--dur-med) var(--ease-ascent);
 }
 
 .tab-content.active-content {
@@ -214,7 +242,7 @@ body {
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(6px); }
+    from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
@@ -226,7 +254,7 @@ body {
 }
 
 /* ==========================================================================
-   Card Styling
+   Card Styling — staggered ascent entrance
    ========================================================================== */
 .card {
     background-color: var(--bg-card);
@@ -234,11 +262,23 @@ body {
     border: 1px solid var(--border-color);
     box-shadow: var(--shadow-md);
     overflow: hidden;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: transform var(--dur-med) var(--ease-ascent), box-shadow var(--dur-med) var(--ease-ascent), border-color var(--dur-med) ease;
+    animation: cardAscend 0.6s var(--ease-ascent) both;
 }
+
+/* Signature entrance: cards rise along the "trajectory" rather than fading
+   in place — a short upward travel with a slight settle. */
+@keyframes cardAscend {
+    0% { opacity: 0; transform: translateY(22px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+.section-grid .card:nth-child(2) { animation-delay: 0.08s; }
 
 .card:hover {
     box-shadow: var(--shadow-lg);
+    border-color: var(--primary-border);
+    transform: translateY(-3px);
 }
 
 .card-header {
@@ -256,13 +296,18 @@ body {
     width: 44px;
     height: 44px;
     background-color: var(--primary-light);
-    color: var(--primary);
+    color: var(--primary-hover);
     border-radius: var(--radius-md);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.25rem;
     flex-shrink: 0;
+    transition: transform var(--dur-fast) var(--ease-ascent);
+}
+
+.card:hover .header-icon {
+    transform: translateY(-2px);
 }
 
 .header-icon.secondary {
@@ -272,8 +317,8 @@ body {
 
 .card-header h2 {
     font-family: var(--font-heading);
-    font-size: 1.25rem;
-    font-weight: 700;
+    font-size: 1.3rem;
+    font-weight: 600;
     color: var(--text-main);
 }
 
@@ -334,7 +379,7 @@ textarea {
     font-family: var(--font-body);
     font-size: 0.95rem;
     color: var(--text-main);
-    transition: all 0.2s ease;
+    transition: border-color var(--dur-fast) ease, box-shadow var(--dur-fast) ease, background-color var(--dur-fast) ease;
 }
 
 input[type="text"]:focus,
@@ -345,11 +390,18 @@ textarea:focus {
     box-shadow: 0 0 0 3px var(--primary-shadow);
 }
 
+input[type="text"]:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 1px;
+}
+
 textarea {
     resize: vertical;
 }
 
-/* Custom File Dropzone */
+/* Custom File Dropzone — animated dashed border "draw" on hover */
 .file-dropzone {
     border: 2px dashed var(--border-color);
     border-radius: var(--radius-md);
@@ -358,13 +410,23 @@ textarea {
     text-align: center;
     position: relative;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: border-color var(--dur-fast) ease, background-color var(--dur-fast) ease, transform var(--dur-fast) ease;
 }
 
 .file-dropzone:hover,
 .file-dropzone.dragover {
     border-color: var(--primary);
     background-color: var(--primary-light);
+    transform: scale(1.005);
+}
+
+.file-dropzone.dragover {
+    animation: dropzonePulse 1s ease-in-out infinite;
+}
+
+@keyframes dropzonePulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(184, 132, 47, 0.25); }
+    50% { box-shadow: 0 0 0 8px rgba(184, 132, 47, 0); }
 }
 
 .file-input {
@@ -381,6 +443,12 @@ textarea {
     font-size: 2.5rem;
     color: var(--primary);
     margin-bottom: 0.5rem;
+    display: inline-block;
+    transition: transform var(--dur-fast) var(--ease-ascent);
+}
+
+.file-dropzone:hover .dropzone-icon {
+    transform: translateY(-3px);
 }
 
 .dropzone-title {
@@ -404,6 +472,7 @@ textarea {
     border-radius: var(--radius-sm);
     border: 1px solid var(--primary-border);
     text-align: left;
+    animation: fadeIn var(--dur-fast) var(--ease-ascent);
 }
 
 .file-icon {
@@ -436,10 +505,12 @@ textarea {
     cursor: pointer;
     padding: 0 0.4rem;
     line-height: 1;
+    transition: color var(--dur-fast) ease, transform var(--dur-fast) ease;
 }
 
 .btn-remove-file:hover {
     color: var(--danger);
+    transform: rotate(90deg);
 }
 
 /* ==========================================================================
@@ -451,13 +522,13 @@ textarea {
     justify-content: center;
     gap: 0.5rem;
     padding: 0.85rem 1.5rem;
-    font-family: var(--font-heading);
+    font-family: var(--font-body);
     font-size: 1rem;
     font-weight: 700;
     border-radius: var(--radius-md);
     border: none;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: transform var(--dur-fast) var(--ease-ascent), box-shadow var(--dur-fast) ease, background-color var(--dur-fast) ease;
     text-decoration: none;
 }
 
@@ -465,12 +536,27 @@ textarea {
     background-color: var(--primary);
     color: #ffffff;
     box-shadow: 0 4px 12px var(--primary-shadow);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, transparent 30%, rgba(255, 255, 255, 0.28) 50%, transparent 70%);
+    transform: translateX(-120%);
+    transition: transform 0.6s ease;
 }
 
 .btn-primary:hover {
     background-color: var(--primary-hover);
-    transform: translateY(-1px);
-    box-shadow: 0 6px 16px var(--primary-shadow);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px var(--primary-shadow);
+}
+
+.btn-primary:hover::after {
+    transform: translateX(120%);
 }
 
 .btn-primary:active {
@@ -482,6 +568,10 @@ textarea {
     box-shadow: none;
     cursor: not-allowed;
     transform: none;
+}
+
+.btn-primary:disabled::after {
+    display: none;
 }
 
 /* ==========================================================================
@@ -497,7 +587,6 @@ textarea {
     padding: 4rem 2rem;
     text-align: center;
     margin: auto 0;
-
 }
 
 .empty-icon {
@@ -505,11 +594,18 @@ textarea {
     color: var(--primary);
     margin-bottom: 1rem;
     opacity: 0.85;
+    animation: emptyFloat 4s ease-in-out infinite;
+}
+
+@keyframes emptyFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
 }
 
 .empty-state h3 {
     font-family: var(--font-heading);
-    font-size: 1.3rem;
+    font-weight: 600;
+    font-size: 1.4rem;
     color: var(--text-main);
     margin-bottom: 0.5rem;
 }
@@ -521,7 +617,7 @@ textarea {
     margin: 0 auto;
 }
 
-/* Loading State */
+/* Loading State — replaces generic spinner ring with an ascending-bars motif */
 .loading-state {
     padding: 4rem 2rem;
     text-align: center;
@@ -530,24 +626,52 @@ textarea {
 
 .spinner {
     width: 48px;
-    height: 48px;
-    border: 4px solid var(--primary-light);
-    border-top: 4px solid var(--primary);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
+    height: 32px;
     margin: 0 auto 1.5rem;
+    border: none;
+    border-radius: 0;
+    background: none;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 5px;
 }
 
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+.spinner::before,
+.spinner::after {
+    content: '';
+    display: block;
+    width: 7px;
+    border-radius: 3px;
+    background: var(--primary);
+    animation: ascendBars 1s ease-in-out infinite;
+}
+
+.spinner::before {
+    height: 60%;
+    animation-delay: -0.3s;
+}
+
+.spinner::after {
+    height: 100%;
+    animation-delay: -0.15s;
+}
+
+/* Middle bar via a pseudo on the loading-text sibling is unnecessary —
+   two bars plus the ::before/::after rhythm already reads as an ascent;
+   kept intentionally simple per the "cut one accessory" rule. */
+
+@keyframes ascendBars {
+    0%, 100% { transform: scaleY(0.4); opacity: 0.6; }
+    50% { transform: scaleY(1); opacity: 1; }
 }
 
 .loading-text {
     font-family: var(--font-heading);
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: var(--primary);
+    font-style: italic;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--primary-hover);
     margin-bottom: 0.3rem;
 }
 
@@ -567,16 +691,18 @@ textarea {
 .output-section {
     background: var(--bg-subtle);
     border: 1px solid var(--border-color);
+    border-left: 3px solid var(--primary);
     border-radius: var(--radius-md);
     padding: 1.25rem;
     margin-bottom: 1.25rem;
+    animation: fadeIn var(--dur-med) var(--ease-ascent);
 }
 
 .output-section h3 {
     font-family: var(--font-heading);
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--primary);
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--primary-hover);
     margin-bottom: 0.75rem;
     display: flex;
     align-items: center;
@@ -585,7 +711,7 @@ textarea {
 
 .output-section p {
     color: var(--text-main);
-    line-height: 1.6;
+    line-height: 1.65;
     margin-bottom: 0.5rem;
 }
 
@@ -601,26 +727,31 @@ textarea {
 }
 
 .output-section li::before {
-    content: "•";
+    content: "—";
     color: var(--primary);
     font-weight: bold;
-    font-size: 1.2rem;
     position: absolute;
-    left: 0.4rem;
-    top: 0.1rem;
+    left: 0.1rem;
+    top: 0.35rem;
 }
 
 /* Badge tags inside results */
 .badge-tag {
     display: inline-block;
     background-color: var(--primary-light);
-    color: var(--primary);
+    color: var(--primary-hover);
     border: 1px solid var(--primary-border);
     padding: 0.2rem 0.6rem;
     border-radius: var(--radius-sm);
-    font-size: 0.825rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
     font-weight: 600;
     margin: 0.2rem 0.2rem;
+    transition: transform var(--dur-fast) ease;
+}
+
+.badge-tag:hover {
+    transform: translateY(-1px);
 }
 
 /* ==========================================================================
@@ -633,19 +764,42 @@ textarea {
 }
 
 .prompt-hero-card {
-    background: linear-gradient(135deg, #ffffff 0%, var(--primary-light) 100%);
-    padding: 2.5rem 2rem;
+    background: var(--bg-card);
+    background-image: linear-gradient(135deg, #ffffff 0%, var(--primary-light) 120%);
+    padding: 3rem 2rem;
     text-align: center;
     border: 1px solid var(--primary-border);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Signature motif: a hand-drawn ascending line that traces itself in behind
+   the hero copy — the literal "career trajectory" the product promises. */
+.prompt-hero-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 120' preserveAspectRatio='none'%3E%3Cpath d='M0 110 C 60 108, 90 95, 130 80 S 210 40, 260 32 S 340 10, 400 6' fill='none' stroke='%23b8842f' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-size: 120% 100%;
+    background-position: bottom;
+    opacity: 0.35;
+    pointer-events: none;
+}
+
+.prompt-hero-card > * {
+    position: relative;
+    z-index: 1;
 }
 
 .hero-badge {
     display: inline-block;
     background: var(--primary);
     color: #ffffff;
-    font-family: var(--font-heading);
-    font-size: 0.85rem;
-    font-weight: 700;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
     padding: 0.35rem 1rem;
     border-radius: 50px;
     margin-bottom: 1rem;
@@ -653,8 +807,9 @@ textarea {
 
 .prompt-hero-header h2 {
     font-family: var(--font-heading);
-    font-size: 2rem;
-    font-weight: 800;
+    font-size: clamp(1.75rem, 3vw, 2.4rem);
+    font-weight: 600;
+    font-style: italic;
     color: var(--text-main);
     margin-bottom: 0.5rem;
 }
@@ -680,17 +835,22 @@ textarea {
     display: flex;
     align-items: center;
     gap: 1.25rem;
+    transition: transform var(--dur-fast) var(--ease-ascent);
+}
+
+.formula-box:hover {
+    transform: translateY(-2px);
 }
 
 .formula-text {
-    font-family: var(--font-heading);
-    font-size: 1.25rem;
-    font-weight: 700;
+    font-family: var(--font-mono);
+    font-size: 1.1rem;
+    font-weight: 600;
     color: var(--text-main);
 }
 
 .formula-text.highlight {
-    color: var(--primary);
+    color: var(--primary-hover);
 }
 
 .formula-arrow {
@@ -732,7 +892,8 @@ textarea {
     display: inline-block;
     padding: 0.2rem 0.6rem;
     border-radius: var(--radius-sm);
-    font-size: 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
     font-weight: 700;
     text-transform: uppercase;
 }
@@ -751,21 +912,21 @@ textarea {
     margin: 0 1.5rem;
     padding: 1.25rem;
     border-radius: var(--radius-md);
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 0.9rem;
-    line-height: 1.5;
+    font-family: var(--font-mono);
+    font-size: 0.88rem;
+    line-height: 1.6;
 }
 
 .bad-box {
-    background-color: #fef2f2;
-    color: #991b1b;
-    border: 1px solid #fecaca;
+    background-color: #fdf1ef;
+    color: #8a3324;
+    border: 1px solid #f3cec5;
 }
 
 .good-box {
-    background-color: #f0fdf4;
-    color: #166534;
-    border: 1px solid #bbf7d0;
+    background-color: #eef7f1;
+    color: #1e5c3b;
+    border: 1px solid #c3e3cf;
 }
 
 .comparison-details {
@@ -803,6 +964,12 @@ textarea {
     display: flex;
     gap: 1rem;
     border: 1px solid var(--border-color);
+    transition: transform var(--dur-fast) var(--ease-ascent), border-color var(--dur-fast) ease;
+}
+
+.component-step:hover {
+    transform: translateY(-3px);
+    border-color: var(--primary-border);
 }
 
 .step-num {
@@ -814,14 +981,15 @@ textarea {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: var(--font-heading);
-    font-weight: 700;
+    font-family: var(--font-mono);
+    font-weight: 600;
     flex-shrink: 0;
 }
 
 .step-content h4 {
     font-family: var(--font-heading);
-    font-size: 1rem;
+    font-weight: 600;
+    font-size: 1.05rem;
     margin-bottom: 0.3rem;
     color: var(--text-main);
 }
@@ -836,7 +1004,7 @@ textarea {
    ========================================================================== */
 .alert-box {
     background-color: var(--danger-light);
-    border: 1px solid #fecaca;
+    border: 1px solid #f3cec5;
     color: var(--danger);
     padding: 1rem 1.5rem;
     border-radius: var(--radius-md);
@@ -845,6 +1013,12 @@ textarea {
     align-items: center;
     gap: 0.75rem;
     box-shadow: var(--shadow-sm);
+    animation: alertSlide var(--dur-med) var(--ease-ascent);
+}
+
+@keyframes alertSlide {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .alert-box.hidden {
@@ -862,6 +1036,11 @@ textarea {
     font-size: 1.4rem;
     color: var(--danger);
     cursor: pointer;
+    transition: transform var(--dur-fast) ease;
+}
+
+.alert-close:hover {
+    transform: scale(1.15);
 }
 
 /* Footer */
@@ -876,6 +1055,23 @@ textarea {
 }
 
 /* ==========================================================================
+   Accessibility
+   ========================================================================== */
+a:focus-visible, button:focus-visible, .nav-btn:focus-visible, .btn:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* ==========================================================================
    Responsive Breakpoints (Desktop, Tablet, Mobile)
    ========================================================================== */
 @media (max-width: 992px) {
@@ -883,7 +1079,7 @@ textarea {
     .prompt-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .result-card {
         min-height: auto;
     }
